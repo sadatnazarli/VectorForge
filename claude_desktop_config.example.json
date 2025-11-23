@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "vectorforge": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/VectorForge/server/dist/index.js"
+      ]
+    }
+  }
+}
