@@ -168,7 +168,7 @@ VectorForge/
 
 ## 📄 License
 
-This project is licensed under the terms of the MIT License. See the [LICENSE](./LICENSE) file for details.
+This project is licensed under the terms of the MIT License. See the [LICENSE](/LISENCEE) file for details.
 
 ---  
 Note: Double-check configuration paths and embedding dimensions before production use.
