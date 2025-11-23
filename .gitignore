@@ -1,0 +1,28 @@
+# Build artifacts
+build/
+server/dist/
+server/node_modules/
+
+# Database files
+data/database.bin
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# TypeScript
+*.tsbuildinfo
+
+# npm
+package-lock.json
