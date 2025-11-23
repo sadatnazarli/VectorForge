@@ -6,7 +6,8 @@
     <a href="#installation--setup">Installation</a> •
     <a href="#usage-guide">Usage</a> •
     <a href="#error-handling--troubleshooting">Troubleshooting</a> •
-    <a href="#architecture">Architecture</a>
+    <a href="#architecture">Architecture</a> •
+    <a href="#license">License</a>
   </p>
 </div>
 
@@ -149,10 +150,11 @@ VectorForge/
 │   └── src/index.ts
 ├── data/              # Binary storage
 │   └── database.bin
-└── images/            # README assets
-    ├── logo.png
-    ├── claude_mcp_location.png
-    └── claude_command_example.png
+├── images/            # README assets
+│   ├── logo.png
+│   ├── claude_mcp_location.png
+│   └── claude_command_example.png
+└── LICENSE            # License file
 ```
 
 ---
@@ -166,7 +168,8 @@ VectorForge/
 
 ## 📄 License
 
-MIT
+This project is licensed under the terms of the MIT License. See the [LICENSE](./LICENSE) file for details.
 
 ---  
 Note: Double-check configuration paths and embedding dimensions before production use.
+
