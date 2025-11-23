@@ -48,10 +48,14 @@ async function executeVectorForge(
   args: string[]
 ): Promise<any> {
   try {
-    const { stdout, stderr } = await execFileAsync(VECTORFORGE_BIN, [
-      command,
-      ...args,
-    ]);
+    // Set working directory to VectorForge root
+    const { stdout, stderr } = await execFileAsync(
+      VECTORFORGE_BIN,
+      [command, ...args],
+      {
+        cwd: join(__dirname, "../../"),
+      }
+    );
 
     if (stderr) {
       console.error("VectorForge stderr:", stderr);
