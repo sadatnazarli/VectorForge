@@ -78,10 +78,10 @@ Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 Below are two helpful images showing where to add the MCP server in Claude Desktop and exactly what to write in the config to connect VectorForge. Place these files in the repository at `images/claude_mcp_location.png` and `images/claude_command_example.png`.
 
 <div align="center">
-  <img src="./images/claude_mcp_location.png" alt="Where to add MCP server in Claude Desktop" width="680"/>
+  <img src="/images/1.png" alt="Where to add MCP server in Claude Desktop" width="680"/>
   <p><em>Screenshot: where to add an MCP connector in Claude Desktop settings.</em></p>
 
-  <img src="./images/claude_command_example.png" alt="Example MCP entry to connect VectorForge" width="680"/>
+  <img src="/images/2.png" alt="Example MCP entry to connect VectorForge" width="680"/>
   <p><em>Screenshot: example JSON entry to add to claude_desktop_config.json.</em></p>
 </div>
 
