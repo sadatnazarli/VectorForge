@@ -1,351 +1,159 @@
-# VectorForge
+<div align="center">
+  <img src="./images/logo.png" alt="VectorForge Logo" width="200"/>
+  <h1>VectorForge</h1>
+  <p><strong>High-Performance Local Vector Database &amp; C++ MCP Server</strong></p>
+  <p>
+    <a href="#installation--setup">Installation</a> •
+    <a href="#usage-guide">Usage</a> •
+    <a href="#error-handling--troubleshooting">Troubleshooting</a> •
+    <a href="#architecture">Architecture</a>
+  </p>
+</div>
 
-A high-performance, local vector database engine written in C++ with a TypeScript Model Context Protocol (MCP) server interface. VectorForge enables AI assistants like Claude to store and retrieve memories locally on your machine.
+---
 
-## Overview
+## 🚀 Overview
 
-VectorForge is a custom-built RAG (Retrieval-Augmented Generation) system consisting of:
+**VectorForge** is a local RAG (Retrieval-Augmented Generation) system that provides long-term memory for AI assistants (e.g., Claude) by combining a high-performance C++ vector engine with a TypeScript Model Context Protocol (MCP) server.
 
-- **C++ Core Engine**: High-performance vector storage and retrieval with cosine similarity search
-- **TypeScript MCP Server**: Clean interface for AI assistants via the Model Context Protocol
-- **Binary Storage**: Efficient flat-file database storing 1536-dimensional vectors (OpenAI embedding compatible)
+Key ideas:
+- C++ for fast vector operations and compact binary storage.
+- Node.js MCP server for integration with Claude and embedding generation.
+- Local-only storage (no cloud required).
 
-## Features
+---
 
-- Zero external dependencies for the C++ core (Standard Library only)
-- Fast binary file I/O operations
-- Cosine similarity search with configurable top-k results
-- Simple JSON-based communication protocol
-- MCP-compliant server for easy integration with Claude and other AI assistants
-- Deterministic mock embeddings for testing (can be replaced with real embedding models)
+## ✨ Features
 
-## Architecture
+- ⚡ C++ Core Engine (C++17, zero external runtime deps)
+- 🔌 MCP Integration (Node.js)
+- 💾 Local binary storage (`data/database.bin`)
+- 🔍 Cosine similarity search
+- 🛠️ Extensible embedding backend (OpenAI, Ollama, etc.)
 
-```
-┌─────────────────┐
-│  Claude / AI    │
-└────────┬────────┘
-         │ MCP Protocol
-┌────────▼────────┐
-│  TypeScript     │
-│  MCP Server     │
-│  (Node.js)      │
-└────────┬────────┘
-         │ Process Execution
-┌────────▼────────┐
-│  C++ Engine     │
-│  vectorforge    │
-└────────┬────────┘
-         │ Binary I/O
-┌────────▼────────┐
-│  database.bin   │
-│  (Local File)   │
-└─────────────────┘
-```
+---
 
-## Project Structure
+## 🏗️ Architecture
 
-```
-VectorForge/
-├── cpp/                    # C++ core engine
-│   ├── vector_store.h     # Vector storage interface
-│   ├── vector_store.cpp   # Implementation
-│   └── main.cpp           # CLI wrapper
-├── server/                # TypeScript MCP server
-│   ├── src/
-│   │   └── index.ts       # MCP server implementation
-│   ├── dist/              # Compiled JavaScript
-│   ├── package.json
-│   └── tsconfig.json
-├── build/                 # Compiled binaries
-│   └── vectorforge        # C++ executable
-├── data/                  # Database storage
-│   └── database.bin       # Vector database file
-├── scripts/               # Helper scripts
-│   └── generate_test_vector.py
-├── Makefile              # Build automation
-└── README.md
+```mermaid
+graph TD
+  A[Claude Desktop App] -->|MCP Protocol| B[Node.js Server]
+  B -->|Executes| C[C++ Binary]
+  C -->|Reads/Writes| D[(data/database.bin)]
+
+  subgraph VectorForge System
+    B
+    C
+    D
+  end
 ```
 
-## Prerequisites
+- Frontend: Claude sends JSON via MCP.
+- Middleware: TypeScript server generates embeddings and forwards requests.
+- Backend: C++ binary handles I/O and vector math.
 
-- **C++ Compiler**: g++ with C++17 support
-- **Node.js**: Version 18 or higher
-- **npm**: Node package manager
-- **Python 3**: (optional) For test scripts
+---
 
-## Installation
+## 🛠️ Installation & Setup
 
-### 1. Clone the Repository
+### Prerequisites
+- g++ (C++17)
+- Node.js v18+
+- npm
+- make
 
+### 1. Clone & Build
 ```bash
-git clone <repository-url>
+git clone https://github.com/yourusername/VectorForge.git
 cd VectorForge
-```
-
-### 2. Build Everything
-
-```bash
 make all
 ```
 
-This will:
-- Compile the C++ engine
-- Install NPM dependencies
-- Build the TypeScript server
+### 2. Configure Claude Desktop
+Edit Claude config to add the MCP server entry (use absolute path):
 
-### Alternative: Build Components Separately
+MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`  
+Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
-```bash
-# Build C++ engine only
-make cpp
-
-# Install and build TypeScript server only
-make server
-```
-
-## Usage
-
-### Direct C++ CLI Usage
-
-The C++ binary can be used directly from the command line:
-
-```bash
-# Add a vector to the database
-./build/vectorforge add "Your text content" "[0.1, 0.2, ..., 1536 values]"
-
-# Search for similar vectors
-./build/vectorforge search "[0.1, 0.2, ..., 1536 values]"
-```
-
-### MCP Server Usage
-
-The primary way to use VectorForge is through the MCP server:
-
-#### 1. Configure Claude Desktop
-
-Add the following to your Claude Desktop MCP configuration file:
-
-**macOS/Linux**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-**Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
-
+Example:
 ```json
 {
   "mcpServers": {
     "vectorforge": {
       "command": "node",
-      "args": ["/absolute/path/to/VectorForge/server/dist/index.js"]
+      "args": ["/ABSOLUTE/PATH/TO/VectorForge/server/dist/index.js"]
     }
   }
 }
 ```
 
-Replace `/absolute/path/to/VectorForge` with your actual project path.
+### 3. Verify
+Restart Claude Desktop and confirm the VectorForge connector appears.
 
-#### 2. Restart Claude Desktop
+---
 
-After updating the configuration, restart Claude Desktop to load the MCP server.
+## 💻 Usage Guide
 
-#### 3. Use the Tools in Claude
+### With Claude (recommended)
+- Store memory: instruct Claude to remember text — triggers `store_memory`, which saves text + embedding to `database.bin`.
+- Recall memory: ask Claude — triggers `recall_memory`, which searches `database.bin` using cosine similarity.
 
-You can now use these tools in your conversations with Claude:
-
-**store_memory**: Store a text memory in the local database
-```
-Claude, please store this memory: "I prefer TypeScript for backend development"
-```
-
-**recall_memory**: Search for similar memories
-```
-Claude, recall memories about my programming preferences
-```
-
-## MCP Tools
-
-### store_memory
-
-Stores a text memory in the local vector database.
-
-**Parameters:**
-- `text` (string): The text content to store
-
-**Example:**
-```json
-{
-  "text": "I had a great meeting with the design team about the new UI"
-}
-```
-
-### recall_memory
-
-Searches for similar memories based on a query.
-
-**Parameters:**
-- `query` (string): The search query
-
-**Returns:** Top 3 most similar memories with similarity scores
-
-**Example:**
-```json
-{
-  "query": "design meetings"
-}
-```
-
-## Testing
-
-### Run C++ Tests
-
+### CLI (developer/debug)
+Add a vector:
 ```bash
-make test
+./build/vectorforge add "This is a test memory" "[0.1, 0.2, 0.3, ...]"
 ```
-
-This will:
-1. Compile the C++ engine
-2. Add test vectors to the database
-3. Perform similarity searches
-4. Verify the output
-
-### Clean Build
-
+Search:
 ```bash
-make clean
+./build/vectorforge search "[0.1, 0.2, 0.3, ...]"
 ```
 
-This removes all build artifacts and the database file.
+---
 
-## Development
+## ⚠️ Error Handling & Troubleshooting
 
-### Rebuilding After Changes
+### Common Errors
 
-```bash
-# Rebuild C++ engine
-make cpp
+| Error / Symptom | Possible Cause | Solution |
+|---|---|---|
+| "Error: C++ executable not found" | C++ binary not built | Run `make cpp` or `make all` |
+| "Permission denied" (on database.bin) | Server lacks write permission | `chmod -R 755 data/` |
+| "MCP Connection Refused" | Incorrect path in config | Use absolute path in `claude_desktop_config.json` |
+| "Vector dimension mismatch" | Embedding size != expected (1536) | Ensure embedding model outputs 1536 dims |
+| "Failed to open database" | Corrupted or missing .bin | Delete `data/database.bin` (it will be recreated) |
 
-# Rebuild TypeScript server
-cd server && npm run build
+### Debugging steps
+1. Check MCP logs (example): `tail -f ~/Library/Logs/Claude/mcp.log`  
+2. Run the C++ binary manually: `./build/vectorforge`  
+3. Rebuild: `make clean && make all`
+
+---
+
+## 📂 Project Structure
+```
+VectorForge/
+├── cpp/               # C++ source
+│   ├── main.cpp
+│   └── vector_store*
+├── server/            # TypeScript MCP server
+│   └── src/index.ts
+├── data/              # Binary storage
+│   └── database.bin
+└── images/            # README assets
 ```
 
-### Development Mode (TypeScript)
+---
 
-```bash
-cd server
-npm run dev  # Watch mode - rebuilds on file changes
-```
+## 🔮 Roadmap
+- Replace mock embeddings with OpenAI / Ollama integration
+- Add metadata (tags, timestamps)
+- Implement HNSW index for large-scale datasets
 
-## How It Works
+---
 
-### Vector Storage
-
-VectorForge uses a simple binary file format:
-
-```c
-struct VectorRecord {
-    int id;                    // Unique identifier
-    float embedding[1536];     // Vector embedding
-    char content[1024];        // Original text content
-};
-```
-
-Records are appended to `data/database.bin` sequentially.
-
-### Similarity Search
-
-The search algorithm:
-1. Reads all records from the binary file
-2. Computes cosine similarity between query vector and each stored vector
-3. Sorts results by similarity score (descending)
-4. Returns top k matches
-
-**Cosine Similarity Formula:**
-```
-similarity = (A · B) / (||A|| × ||B||)
-```
-
-Where:
-- `A · B` is the dot product
-- `||A||` and `||B||` are vector magnitudes
-
-### Mock Embeddings
-
-The current implementation uses deterministic pseudo-random embeddings for testing. For production use, replace `generateMockEmbedding()` in `server/src/index.ts` with a real embedding model like:
-
-- OpenAI's text-embedding-3-small
-- Sentence Transformers (via `@xenova/transformers`)
-- Cohere embeddings
-- Any other 1536-dimensional embedding model
-
-## Performance Characteristics
-
-- **Write Speed**: O(1) - Simple append operation
-- **Search Speed**: O(n) - Linear scan through all vectors
-- **Storage**: ~6.2 KB per record (4 + 6144 + 1024 bytes)
-- **Dimensions**: Fixed at 1536 (configurable in source)
-
-### Optimization Ideas for Large Datasets
-
-For production use with large datasets, consider:
-- Implement indexing (e.g., HNSW, IVF)
-- Add batch operations
-- Use memory mapping for large files
-- Implement approximate nearest neighbor search
-- Add compression for embeddings
-
-## Troubleshooting
-
-### C++ Compilation Errors
-
-Ensure you have g++ with C++17 support:
-```bash
-g++ --version
-```
-
-### MCP Server Not Appearing in Claude
-
-1. Check the config file path is correct
-2. Ensure the absolute path to `index.js` is correct
-3. Restart Claude Desktop
-4. Check Claude's developer console for errors
-
-### Permission Errors
-
-Ensure the data directory is writable:
-```bash
-chmod -R 755 data/
-```
-
-## Security Considerations
-
-- VectorForge stores data in plaintext binary format
-- No encryption is implemented by default
-- The database file is stored locally on your machine
-- Be cautious about what sensitive information you store
-
-## License
+## 📄 License
 
 MIT
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit issues or pull requests.
-
-## Future Enhancements
-
-- [ ] Real embedding model integration
-- [ ] HNSW indexing for faster search
-- [ ] Metadata filtering
-- [ ] Database versioning and migrations
-- [ ] Backup and restore functionality
-- [ ] Multi-collection support
-- [ ] REST API interface
-- [ ] Vector dimension flexibility
-- [ ] Compression and optimization
-
-## Acknowledgments
-
-Built with:
-- C++17 Standard Library
-- Model Context Protocol SDK
-- Node.js and TypeScript
-- Zod for validation
+---  
+Note: Double-check configuration paths and embedding dimensions before production use.
