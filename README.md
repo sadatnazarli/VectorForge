@@ -65,7 +65,7 @@ graph TD
 
 ### 1. Clone & Build
 ```bash
-git clone https://github.com/yourusername/VectorForge.git
+git clone https://github.com/sadatnazarli/VectorForge.git
 cd VectorForge
 make all
 ```
